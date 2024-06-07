@@ -1,0 +1,7 @@
+Package: sysstatsapp
+Version: 0.1-1
+Section: utils
+Priority: optional
+Architecture: all
+Maintainer: kiennguyen-246
+Description: Print out the current usage of CPU and RAM on stdout
