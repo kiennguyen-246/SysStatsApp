@@ -1,0 +1,9 @@
+[Unit]
+Description=CPU and RAM Usage Logger
+
+[Service]
+Type=simple
+ExecStart=/bin/sysstatsapp.sh
+
+[Install]
+WantedBy=multi-user.target
