@@ -5,10 +5,25 @@
 #include <CPUStats.hpp>
 #include <RAMStats.hpp>
 
-int main() {
-    int retrievalInterval = 3;
-    CPUStats* cpus = new CPUStats(retrievalInterval);
-    RAMStats* rams = new RAMStats(retrievalInterval);
+int main(int argc, char* argv[]) {
+    int retrievalInterval = 0;
+    if (argc == 1) {
+        retrievalInterval = 3;
+    } 
+    else {
+        retrievalInterval = atoi(argv[1]);
+    }
+    // int retrievalInterval = 3;
+    CPUStats* cpus;
+    RAMStats* rams;
+    try {
+        cpus = new CPUStats(retrievalInterval);
+        rams = new RAMStats(retrievalInterval);
+    } catch (std::runtime_error& e) {
+        std::cout << "An error occured.\n";
+        return 0;
+    }
+    
     for (int loop = 0; loop < 100; ++loop) {
         // std::cout << "Loop " << loop << ":\n";
         auto futureCPUUsage = std::async(&CPUStats::getCurrentUsage, cpus);
