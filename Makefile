@@ -16,8 +16,7 @@ sysstatsapp.deb: ./sysstatsapp.sh ./lib/libsysstats.so ./sysstatsapp/DEBIAN/cont
 	dpkg-deb --root-owner-group --build sysstatsapp
 
 clean:
+	rm -rf .vscode
+	rm -rf obj
+	rm -rf lib
 	rm sysstatsapp.sh
-	rm ./obj/CPUstats.o
-	rm ./obj/RAMstats.o
-	rm ./lib/libsysstats.so
-	rm sysstatsapp.deb
