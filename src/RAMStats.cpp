@@ -5,6 +5,9 @@ RAMStats::RAMStats() {
 }
 
 RAMStats::RAMStats(int __retrievalInterval) {
+    if (__retrievalInterval <= 0) {
+        throw std::range_error("Retrieval Interval must be positive");
+    }
     retrievalInterval = __retrievalInterval;
 }
 
@@ -46,7 +49,7 @@ std::vector<long long> RAMStats::readProcFile() {
         // std::cout << cat0 << " " << total << " " << unit0 << " " << cat1 << " " << free << " " << unit1 << "\n";
         ret = {total, free};
     } else {
-        throw std::ios_base::failure("/proc/meminfo not found");
+        throw std::range_error("/proc/meminfo not found");
     }
     fi.close();
     // for (auto i : ret) std::cout << i << " ";

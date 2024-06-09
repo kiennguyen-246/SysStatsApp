@@ -6,6 +6,9 @@ CPUStats::CPUStats() {
 }
 
 CPUStats::CPUStats(int __retrievalInterval) {
+    if (__retrievalInterval <= 0) {
+        throw std::range_error("Retrieval Interval must be positive");
+    }
     retrievalInterval = __retrievalInterval;
     baseSpeed = getCPUBaseSpeed() * 1e6;
 }
@@ -46,7 +49,7 @@ double CPUStats::getCurrentTotal() {
     auto v1 = this->readProcFile();
     long long ans0 = 0;
     long long ans1 = 0;
-    for (int i = 0; i < 7; ++i) {
+    for (int i = 0; i < int(v0.size()); ++i) {
         ans0 += v0[i];
         ans1 += v1[i];
     }
@@ -60,12 +63,19 @@ std::vector<long long> CPUStats::readProcFile() {
     std::ifstream fi;
     fi.open(STAT_PATH);
     if (fi.is_open()) {
-        std::string cpuName;
-        long long user, nice, system, idle, iowait, irq, softirq;
-        fi >> cpuName >> user >> nice >> system >> idle >> iowait >> irq >> softirq;
-        ret = {user, nice, system, idle, iowait, irq, softirq};
-    } else {
-        throw std::ios_base::failure("/proc/stat not found");
+        std::string inp;
+        int cnt = 0;
+        while (fi >> inp) {
+            if (inp[0] >= '0' && inp[0] <= '9') {
+                long long num = atoll(&inp[0]);
+                ret.push_back(num);
+            } else {
+                ++cnt;
+            }
+            if (cnt == 2) {
+                break;
+            } 
+        }
     }
     fi.close();
     // for (auto i : ret) std::cout << i << " ";
@@ -90,9 +100,6 @@ double CPUStats::getCPUBaseSpeed() {
             }
             last = cur;
         }
-    }
-    else {
-        throw std::ios_base::failure("/proc/cpuinfo not found");
     }
     fi.close();
     return ret;
